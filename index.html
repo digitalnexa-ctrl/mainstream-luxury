@@ -2,99 +2,988 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>MAINSTREAM — Luxury Indian Streetwear</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
 <link rel="stylesheet" href="style.css">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
+
 </head>
+
 <body>
-<div class="announcement">FREE EXPRESS SHIPPING ACROSS INDIA ON ALL ORDERS</div>
-<header class="header">
-  <a class="logo" href="index.html">MAINSTREAM</a>
-  <nav><a href="index.html">HOME</a><a href="shop.html">SHOP</a><a href="#manifesto">MANIFESTO</a><a href="#faq">FAQ</a></nav>
-  <div class="actions"><button onclick="openSearch()">⌕</button><button onclick="toggleWishlist()">♡</button><a href="cart.html" class="bag">▢<span id="cartCount">0</span></a></div>
+
+<!-- =========================================
+     ANNOUNCEMENT BAR
+========================================= -->
+
+<div class="announcement">
+    FREE EXPRESS SHIPPING ACROSS INDIA ON ALL ORDERS
+</div>
+
+
+<!-- =========================================
+     HEADER
+========================================= -->
+
+<header class="site-header">
+
+    <a href="index.html" class="brand">
+        MAINSTREAM
+    </a>
+
+    <nav class="desktop-nav">
+
+        <a href="shop.html">SHOP</a>
+        <a href="#manifesto">MANIFESTO</a>
+        <a href="#craft">CRAFT</a>
+        <a href="#community">COMMUNITY</a>
+        <a href="#faq">FAQ</a>
+
+    </nav>
+
+    <div class="header-actions">
+
+        <button onclick="searchProducts()" aria-label="Search">
+            ⌕
+        </button>
+
+        <button onclick="toggleWishlist()" aria-label="Wishlist">
+            ♡
+        </button>
+
+        <button onclick="openCart()" class="cart-button">
+            ♧
+            <span id="cartCount">0</span>
+        </button>
+
+    </div>
+
 </header>
 
-<main>
+
+<!-- =========================================
+     MOBILE MENU
+========================================= -->
+
+<div class="mobile-menu">
+
+    <a href="shop.html">SHOP</a>
+    <a href="#manifesto">MANIFESTO</a>
+    <a href="#craft">CRAFT</a>
+    <a href="#community">COMMUNITY</a>
+    <a href="#faq">FAQ</a>
+
+</div>
+
+
+<!-- =========================================
+     HERO
+========================================= -->
+
 <section class="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-content">
-    <p class="mono">DROP · AUTUMN / WINTER 2026 · 460 GSM</p>
-    <h1>MAINSTREAM</h1>
-    <h2>“WEAR YOUR STATEMENT.”</h2>
-    <p>Indian high-fashion streetwear crafted from heavyweight French terry and Supima cotton. Sculptural fits engineered for modern presence.</p>
-    <div class="hero-buttons"><a class="btn light" href="shop.html">SHOP NEW DROP ↗</a><a class="btn outline" href="shop.html">EXPLORE COLLECTION ↗</a></div>
-  </div>
+
+    <div class="hero-overlay"></div>
+
+    <div class="hero-content">
+
+        <p class="eyebrow">
+            DROP 001 &nbsp; // &nbsp; AUTUMN / WINTER 2026
+        </p>
+
+        <h1>
+            MAINSTREAM
+        </h1>
+
+        <p class="hero-statement">
+            “WEAR YOUR STATEMENT.”
+        </p>
+
+        <p class="hero-description">
+            Indian luxury streetwear engineered for the modern
+            generation. Heavyweight silhouettes, architectural
+            details and uncompromising craftsmanship.
+        </p>
+
+        <div class="hero-buttons">
+
+            <a href="shop.html" class="button primary">
+                SHOP NEW DROP ↗
+            </a>
+
+            <a href="#collection" class="button secondary">
+                EXPLORE COLLECTION ↗
+            </a>
+
+        </div>
+
+    </div>
+
+    <div class="scroll-indicator">
+        SCROLL TO DISCOVER
+        <span>↓</span>
+    </div>
+
 </section>
 
-<section class="drop section">
-  <div class="section-head">
-    <div><p class="mono">✧ DROP 004 / LIMITED ATELIER ALLOCATION</p><h2>NEW DROP</h2><p>Four signature silhouettes using heavyweight 460–500 GSM loopback French terry and 280 GSM Supima cotton with subtle Indian architectural motifs.</p></div>
-    <a href="shop.html" class="under mono">VIEW ALL PRODUCTS (8) →</a>
-  </div>
-  <div class="products-grid" id="featuredProducts"></div>
+
+<!-- =========================================
+     NEW DROP
+========================================= -->
+
+<section id="collection" class="section products-section">
+
+    <div class="section-intro">
+
+        <p class="eyebrow">
+            ✧ DROP 001 / LIMITED ATELIER ALLOCATION
+        </p>
+
+        <h2>NEW DROP</h2>
+
+        <p>
+            Signature silhouettes crafted from heavyweight
+            Indian cotton and premium French terry, inspired
+            by India's architectural heritage.
+        </p>
+
+        <a href="shop.html" class="text-link">
+            VIEW ALL PRODUCTS (8) →
+        </a>
+
+    </div>
+
+
+    <div class="products-grid">
+
+
+        <!-- PRODUCT 1 -->
+
+        <article class="product-card reveal">
+
+            <div class="product-image-wrap">
+
+                <span class="product-label">
+                    NEW DROP
+                </span>
+
+                <button class="wishlist-btn">
+                    ♡
+                </button>
+
+                <img
+                    src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=1200&q=85"
+                    alt="Luxury black hoodie"
+                    class="product-image"
+                >
+
+            </div>
+
+            <div class="product-info">
+
+                <p class="product-category">
+                    MUGHAL ARCHITECTURAL
+                    &nbsp;·&nbsp; OVERSIZED BOXY
+                </p>
+
+                <h3>
+                    JAALI PERFORATED OVERSIZED HOODIE
+                </h3>
+
+                <div class="price">
+                    ₹7,490
+                    <del>₹8,990</del>
+                </div>
+
+                <p class="product-color">
+                    Onyx Black
+                </p>
+
+                <div class="sizes">
+                    <button>S</button>
+                    <button class="selected">M</button>
+                    <button>L</button>
+                    <button>XL</button>
+                    <button>XXL</button>
+                </div>
+
+                <button
+                    class="add-cart"
+                    onclick="addToCart({
+                        id:'hoodie-001',
+                        name:'Jaali Perforated Oversized Hoodie',
+                        price:7490,
+                        image:'https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=1200&q=85',
+                        size:'M',
+                        color:'Onyx Black'
+                    })"
+                >
+                    ADD TO CART
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <!-- PRODUCT 2 -->
+
+        <article class="product-card reveal">
+
+            <div class="product-image-wrap">
+
+                <span class="product-label">
+                    NEW DROP
+                </span>
+
+                <button class="wishlist-btn">
+                    ♡
+                </button>
+
+                <img
+                    src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1200&q=85"
+                    alt="Heavyweight black t-shirt"
+                    class="product-image"
+                >
+
+            </div>
+
+            <div class="product-info">
+
+                <p class="product-category">
+                    VARANASI SACRED GEOMETRY
+                    &nbsp;·&nbsp; HEAVYWEIGHT
+                </p>
+
+                <h3>
+                    VARANASI RELIEF HEAVYWEIGHT TEE
+                </h3>
+
+                <div class="price">
+                    ₹3,890
+                    <del>₹4,490</del>
+                </div>
+
+                <p class="product-color">
+                    Pitch Black
+                </p>
+
+                <div class="sizes">
+                    <button>XS</button>
+                    <button class="selected">S</button>
+                    <button>M</button>
+                    <button>L</button>
+                    <button>XL</button>
+                    <button>XXL</button>
+                </div>
+
+                <button
+                    class="add-cart"
+                    onclick="addToCart({
+                        id:'tee-001',
+                        name:'Varanasi Relief Heavyweight Tee',
+                        price:3890,
+                        image:'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1200&q=85',
+                        size:'S',
+                        color:'Pitch Black'
+                    })"
+                >
+                    ADD TO CART
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <!-- PRODUCT 3 -->
+
+        <article class="product-card reveal">
+
+            <div class="product-image-wrap">
+
+                <span class="product-label">
+                    NEW DROP
+                </span>
+
+                <button class="wishlist-btn">
+                    ♡
+                </button>
+
+                <img
+                    src="https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=1200&q=85"
+                    alt="Luxury oversized sweatshirt"
+                    class="product-image"
+                >
+
+            </div>
+
+            <div class="product-info">
+
+                <p class="product-category">
+                    DEVANAGARI MODERNIST
+                    &nbsp;·&nbsp; RELAXED
+                </p>
+
+                <h3>
+                    MUKHYADHARA STATEMENT PULLOVER
+                </h3>
+
+                <div class="price">
+                    ₹7,990
+                    <del>₹9,490</del>
+                </div>
+
+                <p class="product-color">
+                    Washed Onyx
+                </p>
+
+                <div class="sizes">
+                    <button>S</button>
+                    <button class="selected">M</button>
+                    <button>L</button>
+                    <button>XL</button>
+                    <button>XXL</button>
+                </div>
+
+                <button
+                    class="add-cart"
+                    onclick="addToCart({
+                        id:'pullover-001',
+                        name:'Mukhyadhara Statement Pullover',
+                        price:7990,
+                        image:'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=1200&q=85',
+                        size:'M',
+                        color:'Washed Onyx'
+                    })"
+                >
+                    ADD TO CART
+                </button>
+
+            </div>
+
+        </article>
+
+
+        <!-- PRODUCT 4 -->
+
+        <article class="product-card reveal">
+
+            <div class="product-image-wrap">
+
+                <span class="product-label">
+                    NEW DROP
+                </span>
+
+                <button class="wishlist-btn">
+                    ♡
+                </button>
+
+                <img
+                    src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=1200&q=85"
+                    alt="Charcoal heavyweight tee"
+                    class="product-image"
+                >
+
+            </div>
+
+            <div class="product-info">
+
+                <p class="product-category">
+                    CHANDERI ZARI ARCHITECTURE
+                    &nbsp;·&nbsp; OVERSIZED BOXY
+                </p>
+
+                <h3>
+                    CHANDERI GEOMETRIC HEAVY TEE
+                </h3>
+
+                <div class="price">
+                    ₹3,990
+                    <del>₹4,690</del>
+                </div>
+
+                <p class="product-color">
+                    Charcoal Melange
+                </p>
+
+                <div class="sizes">
+                    <button>XS</button>
+                    <button class="selected">S</button>
+                    <button>M</button>
+                    <button>L</button>
+                    <button>XL</button>
+                </div>
+
+                <button
+                    class="add-cart"
+                    onclick="addToCart({
+                        id:'tee-002',
+                        name:'Chanderi Geometric Heavy Tee',
+                        price:3990,
+                        image:'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&fit=crop&w=1200&q=85',
+                        size:'S',
+                        color:'Charcoal Melange'
+                    })"
+                >
+                    ADD TO CART
+                </button>
+
+            </div>
+
+        </article>
+
+    </div>
+
 </section>
 
-<section id="manifesto" class="manifesto section">
-  <p class="mono">MANIFESTO // THE PHILOSOPHY</p>
-  <h2>“MORE THAN A BRAND.<br>IT'S A STATEMENT.”</h2>
-  <p class="lead">MAINSTREAM represents <b>individuality</b>, unapologetic confidence, modern fashion, and premium everyday streetwear.</p>
-  <div class="principles">
-    <article><span>01</span><h3>INDIVIDUALITY & PRESENCE</h3><p>Architectural volume, exaggerated shoulders, dense ribbing and substantial drape designed to command space.</p><small>PURPOSE-DRIVEN SILHOUETTES</small></article>
-    <article><span>02</span><h3>INDIAN HERITAGE & SUBTLE GEOMETRY</h3><p>Inspired by Indian textile intelligence, Mughal jaali lattices and Devanagari forms—translated into tonal modern streetwear.</p><small>INDIGENOUS ROOTS · GLOBAL AESTHETIC</small></article>
-    <article><span>03</span><h3>ZERO COMPROMISE CRAFT</h3><p>Premium 280–290 GSM tees and 460–500 GSM hoodies made with long-staple cotton and engineered for longevity.</p><small>HEAVYWEIGHT FRENCH TERRY</small></article>
-  </div>
+
+<!-- =========================================
+     MANIFESTO
+========================================= -->
+
+<section id="manifesto" class="manifesto">
+
+    <div class="manifesto-heading">
+
+        <p class="eyebrow">
+            MANIFESTO // THE PHILOSOPHY
+        </p>
+
+        <h2>
+            “MORE THAN A<br>
+            BRAND.<br>
+            IT'S A<br>
+            STATEMENT.”
+        </h2>
+
+        <p>
+            MAINSTREAM represents
+            <strong>individuality</strong>,
+            unapologetic confidence,
+            modern fashion, and
+            premium everyday streetwear.
+        </p>
+
+    </div>
+
+
+    <div class="manifesto-grid">
+
+
+        <article class="manifesto-card reveal">
+
+            <div class="manifesto-icon">✦</div>
+
+            <h3>
+                01. INDIVIDUALITY & PRESENCE
+            </h3>
+
+            <p>
+                In an era of mass-produced disposable fashion,
+                MAINSTREAM stands for singular conviction.
+                Our silhouettes are cut with architectural volume,
+                exaggerated shoulders, dense ribbing and
+                substantial drape that commands space.
+            </p>
+
+            <span>
+                PURPOSE-DRIVEN SILHOUETTES
+            </span>
+
+        </article>
+
+
+        <article class="manifesto-card reveal">
+
+            <div class="manifesto-icon">◈</div>
+
+            <h3>
+                02. INDIAN HERITAGE & SUBTLE GEOMETRY
+            </h3>
+
+            <p>
+                We draw inspiration from India's textile
+                intelligence, architectural geometry and
+                traditional craftsmanship.
+                Never loud. Always intentional.
+            </p>
+
+            <span>
+                INDIGENOUS ROOTS · GLOBAL AESTHETIC
+            </span>
+
+        </article>
+
+
+        <article class="manifesto-card reveal">
+
+            <div class="manifesto-icon">◇</div>
+
+            <h3>
+                03. ZERO COMPROMISE CRAFT
+            </h3>
+
+            <p>
+                We focus on heavyweight luxury streetwear,
+                premium cotton and exceptional construction.
+                Every garment is designed to outlast trends.
+            </p>
+
+            <span>
+                460–500 GSM HEAVYWEIGHT FRENCH TERRY
+            </span>
+
+        </article>
+
+    </div>
+
 </section>
 
-<section class="stats"><div><b>460+</b><span>GSM FRENCH TERRY</span></div><div><b>100%</b><span>INDIAN SUPIMA COTTON</span></div><div><b>250</b><span>UNITS PER BATCH</span></div><div><b>0%</b><span>SYNTHETIC BLENDS</span></div></section>
 
-<section class="reviews section">
-  <p class="mono">STREET TESTED // VERIFIED REVIEWS</p><h2>COMMUNITY<br>APPRAISALS</h2>
-  <div class="rating">★★★★★ <span>4.9 / 5.0</span> <small>(180+ Verified Customers)</small></div>
-  <div class="review-grid">
-    <article><div>★★★★★ <time>2 weeks ago</time></div><label>JAALI PERFORATED OVERSIZED HOODIE</label><p>“The drape and weight feel comparable to European luxury houses, but with an authentic Indian identity.”</p><strong>Kabir Singhania</strong><small>Mumbai, IN · ✓ Verified Buyer</small></article>
-    <article><div>★★★★★ <time>1 month ago</time></div><label>VARANASI RELIEF HEAVYWEIGHT TEE</label><p>“The thick collar stays crisp after repeated washes. You feel the quality the moment you put it on.”</p><strong>Aarav Mehta</strong><small>Bengaluru, IN · ✓ Verified Buyer</small></article>
-    <article><div>★★★★★ <time>3 weeks ago</time></div><label>MUKHYADHARA STATEMENT PULLOVER</label><p>“The typography is executed with restraint. The heavyweight fabric feels like genuine armor.”</p><strong>Devansh Kulkarni</strong><small>New Delhi, IN · ✓ Verified Buyer</small></article>
-  </div>
+<!-- =========================================
+     STATS
+========================================= -->
+
+<section class="stats">
+
+    <div>
+        <strong>460+</strong>
+        <span>GSM FRENCH TERRY</span>
+    </div>
+
+    <div>
+        <strong>100%</strong>
+        <span>INDIAN COTTON</span>
+    </div>
+
+    <div>
+        <strong>250</strong>
+        <span>UNITS PER BATCH</span>
+    </div>
+
+    <div>
+        <strong>0%</strong>
+        <span>SYNTHETIC BLENDS</span>
+    </div>
+
 </section>
 
-<section class="instagram section">
-  <p class="mono">COMMUNITY & CURATION // @MAINSTREAM.IN</p><h2>#WEARYOURSTATEMENT</h2>
-  <div class="insta-grid">
-    <img src="https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=900&q=85">
-    <img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=900&q=85">
-    <img src="https://images.unsplash.com/photo-1551488831-9c0f6b3b6e2c?auto=format&fit=crop&w=900&q=85">
-    <img src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=900&q=85">
-  </div>
-  <p class="mono center">TAG @MAINSTREAM.IN TO BE FEATURED IN OUR ARCHIVE</p>
+
+<!-- =========================================
+     CRAFT
+========================================= -->
+
+<section id="craft" class="craft-section">
+
+    <p class="eyebrow">
+        ATELIER CRAFTSMANSHIP
+    </p>
+
+    <h2>
+        BUILT WITH<br>
+        INTENTION.
+    </h2>
+
+    <p>
+        From fabric selection to the final stitch,
+        every MAINSTREAM garment is developed around
+        quality, structure and long-term wear.
+    </p>
+
+    <a href="shop.html" class="button primary">
+        EXPLORE COMPLETE ARCHIVE →
+    </a>
+
 </section>
 
-<section id="faq" class="faq section">
-  <p class="mono center">◉ INQUIRIES & DETAILS</p><h2>FREQUENTLY<br>ASKED QUESTIONS</h2><p class="center lead">Everything you need to know about our atelier, fabrics, sizing, and shipping.</p>
-  <div class="faq-list">
-    <details open><summary>How do MAINSTREAM silhouettes fit?</summary><p>Our garments use a relaxed luxury-streetwear drape. T-shirts feature dropped shoulders and a boxy torso; hoodies have a structured hood and relaxed chest. Size down for a more tailored fit.</p></details>
-    <details><summary>What makes MAINSTREAM Indian cotton special?</summary><p>We focus on long-staple Indian cotton and heavyweight constructions selected for hand-feel, structure and durability.</p></details>
-    <details><summary>How long does delivery take?</summary><p>Domestic delivery generally takes 3–7 business days after dispatch. Remote areas may require additional time.</p></details>
-    <details><summary>Can I pay via COD or UPI?</summary><p>Yes. Checkout can support UPI, cards, net banking and Cash on Delivery when enabled for the order.</p></details>
-    <details><summary>What is your return and exchange policy?</summary><p>Eligible unworn items can be returned or exchanged according to the final policy configured by the brand.</p></details>
-  </div>
+
+<!-- =========================================
+     COMMUNITY
+========================================= -->
+
+<section id="community" class="community">
+
+    <div class="section-intro">
+
+        <p class="eyebrow">
+            STREET TESTED // VERIFIED REVIEWS
+        </p>
+
+        <h2>
+            COMMUNITY<br>
+            APPRAISALS
+        </h2>
+
+        <div class="rating">
+            ★★★★★
+            <span>4.9 / 5.0</span>
+        </div>
+
+    </div>
+
+
+    <div class="reviews">
+
+        <article class="review">
+
+            <div class="review-top">
+                <span>★★★★★</span>
+                <small>2 weeks ago</small>
+            </div>
+
+            <h3>
+                JAALI PERFORATED OVERSIZED HOODIE
+            </h3>
+
+            <p>
+                “The drape and weight feel exceptional.
+                The silhouette has a genuine luxury presence.”
+            </p>
+
+            <strong>
+                Verified Buyer
+            </strong>
+
+        </article>
+
+
+        <article class="review">
+
+            <div class="review-top">
+                <span>★★★★★</span>
+                <small>1 month ago</small>
+            </div>
+
+            <h3>
+                VARANASI RELIEF HEAVYWEIGHT TEE
+            </h3>
+
+            <p>
+                “The structure stays crisp after repeated
+                washes. The subtle tonal detailing makes
+                the piece feel incredibly premium.”
+            </p>
+
+            <strong>
+                Verified Buyer
+            </strong>
+
+        </article>
+
+
+        <article class="review">
+
+            <div class="review-top">
+                <span>★★★★★</span>
+                <small>3 weeks ago</small>
+            </div>
+
+            <h3>
+                MUKHYADHARA STATEMENT PULLOVER
+            </h3>
+
+            <p>
+                “Strong silhouette, excellent weight and
+                a design language that feels distinctly Indian.”
+            </p>
+
+            <strong>
+                Verified Buyer
+            </strong>
+
+        </article>
+
+    </div>
+
 </section>
 
-<section class="newsletter section">
-  <p class="mono center">✉ EXCLUSIVE ATELIER ACCESS</p><h2>JOIN THE<br>INNER CIRCLE</h2>
-  <p class="center lead">Gain early access to new drops, secret restocks, and receive 10% off your first order.</p>
-  <form onsubmit="subscribe(event)"><input type="email" placeholder="Enter your email address..." required><button>SUBSCRIBE →</button></form>
-  <small class="mono center">STRICT ZERO SPAM POLICY · DISPATCHED ONLY DURING VAULT DROPS</small>
+
+<!-- =========================================
+     INSTAGRAM
+========================================= -->
+
+<section class="instagram">
+
+    <p class="eyebrow">
+        COMMUNITY & CURATION // @MAINSTREAM.IN
+    </p>
+
+    <h2>
+        #WEARYOURSTATEMENT
+    </h2>
+
+    <a href="#" class="text-link">
+        FOLLOW ON INSTAGRAM ↗
+    </a>
+
+
+    <div class="instagram-grid">
+
+        <img
+            src="https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=800&q=85"
+            alt=""
+        >
+
+        <img
+            src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=85"
+            alt=""
+        >
+
+        <img
+            src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=800&q=85"
+            alt=""
+        >
+
+        <img
+            src="https://images.unsplash.com/photo-1485968579580-b6d095142e6e?auto=format&fit=crop&w=800&q=85"
+            alt=""
+        >
+
+    </div>
+
 </section>
-</main>
+
+
+<!-- =========================================
+     FAQ
+========================================= -->
+
+<section id="faq" class="faq">
+
+    <p class="eyebrow">
+        ◉ INQUIRIES & DETAILS
+    </p>
+
+    <h2>
+        FREQUENTLY<br>
+        ASKED QUESTIONS
+    </h2>
+
+    <p class="faq-intro">
+        Everything you need to know about our
+        garments, sizing, fabrics and shipping.
+    </p>
+
+
+    <div class="faq-list">
+
+        <details open>
+
+            <summary>
+                How do MAINSTREAM silhouettes fit?
+                <span>+</span>
+            </summary>
+
+            <p>
+                MAINSTREAM garments are designed with an
+                intentional luxury streetwear drape.
+                T-shirts feature dropped shoulders and
+                relaxed proportions, while hoodies are
+                engineered for a structured oversized fit.
+            </p>
+
+        </details>
+
+
+        <details>
+
+            <summary>
+                What makes MAINSTREAM cotton special?
+                <span>+</span>
+            </summary>
+
+            <p>
+                We focus on premium Indian cotton selected
+                for softness, structure and durability.
+            </p>
+
+        </details>
+
+
+        <details>
+
+            <summary>
+                How long does delivery take?
+                <span>+</span>
+            </summary>
+
+            <p>
+                Domestic orders are generally dispatched
+                within the stated processing period and
+                delivery timelines may vary by location.
+            </p>
+
+        </details>
+
+
+        <details>
+
+            <summary>
+                Can I pay using UPI or COD?
+                <span>+</span>
+            </summary>
+
+            <p>
+                Payment options can include UPI,
+                cards and Cash on Delivery depending
+                on availability.
+            </p>
+
+        </details>
+
+
+        <details>
+
+            <summary>
+    What is your return and exchange policy?
+    <span>+</span>
+</summary>
+
+<p>
+    Please review the return and exchange
+    terms provided at checkout before placing
+    your order.
+</p>
+
+</details>
+
+</div>
+
+</section>
+
+
+<!-- =========================================
+     INNER CIRCLE
+========================================= -->
+
+<section class="inner-circle">
+
+    <p class="eyebrow">
+        ✉ EXCLUSIVE ATELIER ACCESS
+    </p>
+
+    <h2>
+        JOIN THE<br>
+        INNER CIRCLE
+    </h2>
+
+    <p>
+        Gain early access to new drops, secret restocks
+        and exclusive offers.
+    </p>
+
+    <div class="newsletter">
+
+        <input
+            id="newsletterEmail"
+            type="email"
+            placeholder="Enter your email address..."
+        >
+
+        <button onclick="subscribeNewsletter()">
+            SUBSCRIBE →
+        </button>
+
+    </div>
+
+    <small>
+        STRICT ZERO SPAM POLICY
+    </small>
+
+</section>
+
+
+<!-- =========================================
+     FOOTER
+========================================= -->
 
 <footer>
-  <div class="footer-logo">MAINSTREAM</div><p>“WEAR YOUR STATEMENT.”</p>
-  <div class="footer-cols"><div><h4>COLLECTIONS</h4><a href="shop.html">All Streetwear</a><a href="shop.html">Heavyweight Hoodies</a><a href="shop.html">Drop Shoulder T-Shirts</a><a href="shop.html">New Drop</a></div><div><h4>CLIENT SERVICES</h4><a href="#faq">Size Guide</a><a href="#faq">Shipping</a><a href="#faq">Returns & Exchanges</a><a href="#faq">Care & Fabric</a></div><div><h4>ATELIER INQUIRIES</h4><a href="mailto:concierge@mainstream.in">concierge@mainstream.in ↗</a><a href="#">WhatsApp VIP Concierge ↗</a></div></div>
-  <div class="copyright">© 2026 MAINSTREAM CLOTHING PRIVATE LIMITED. ALL RIGHTS RESERVED.</div>
+
+    <div class="footer-brand">
+        MAINSTREAM
+    </div>
+
+    <p class="footer-tagline">
+        “WEAR YOUR STATEMENT.”
+    </p>
+
+    <p class="footer-description">
+        An Indian luxury streetwear label engineered
+        for modern expression.
+    </p>
+
+
+    <div class="footer-grid">
+
+        <div>
+
+            <h4>COLLECTIONS</h4>
+
+            <a href="shop.html">All Streetwear</a>
+            <a href="shop.html">Heavyweight Hoodies</a>
+            <a href="shop.html">Drop Shoulder T-Shirts</a>
+            <a href="shop.html">New Drop</a>
+
+        </div>
+
+
+        <div>
+
+            <h4>CLIENT SERVICES</h4>
+
+            <a href="#faq">Size Guide</a>
+            <a href="#faq">Shipping</a>
+            <a href="#faq">Returns & Exchanges</a>
+            <a href="#faq">Care & Fabric</a>
+
+        </div>
+
+
+        <div>
+
+            <h4>ATELIER</h4>
+
+            <a href="#manifesto">The Manifesto</a>
+            <a href="#community">Community</a>
+            <a href="#faq">Concierge Support</a>
+
+            <a href="https://wa.me/" target="_blank">
+                WhatsApp Concierge ↗
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="footer-bottom">
+
+        <span>
+            © 2026 MAINSTREAM. ALL RIGHTS RESERVED.
+        </span>
+
+        <span>
+            UPI · VISA · MASTERCARD · NETBANKING · COD
+        </span>
+
+    </div>
+
 </footer>
 
-<div class="search-overlay" id="searchOverlay"><button onclick="closeSearch()">×</button><input id="searchInput" placeholder="SEARCH MAINSTREAM..." oninput="searchSite()"><div id="searchResults"></div></div>
+
+<!-- =========================================
+     NOTIFICATION
+========================================= -->
+
+<div class="mainstream-notification"></div>
+
+
 <script src="script.js"></script>
-</body></html>
+
+</body>
+</html>
