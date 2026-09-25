@@ -545,3 +545,107 @@ button {
     .pdp-gallery img { width: 100%; height: auto; aspect-ratio: 3/4; }
     .pdp-info { position: sticky; top: 100px; height: fit-content; padding: 0; }
 }
+/* =========================================
+   LUXURY STREETWEAR UPGRADE PACK
+========================================= */
+
+/* 1. THE DROP TICKER (Scrolling Announcement) */
+.announcement-bar {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+}
+.announcement-bar p {
+    display: inline-block;
+    padding-left: 100%; /* Start off-screen */
+    animation: marquee 15s linear infinite;
+}
+@keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+}
+
+/* 2. SIGNATURE BUTTON SWEEP (Yellow Fill Effect) */
+.btn-primary {
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    border: 1px solid var(--text-primary);
+    transition: color 0.4s ease;
+}
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+    z-index: -1;
+}
+.btn-primary:hover {
+    background: transparent;
+    color: var(--text-primary);
+    box-shadow: none;
+    transform: translateY(0);
+}
+.btn-primary:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+/* 3. EDITORIAL IMAGE OVERLAYS (Moody Hover) */
+.product-image-wrap::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.15);
+    opacity: 0;
+    transition: var(--transition);
+    pointer-events: none;
+}
+.product-card:hover .product-image-wrap::after {
+    opacity: 1;
+}
+.product-card:hover .quick-add {
+    background: var(--text-primary);
+    color: white;
+}
+
+/* 4. DESIGNER FILTERS (Sleek Minimalist Dropdowns) */
+.discovery-filters select {
+    appearance: none;
+    background-color: transparent;
+    border: none;
+    border-bottom: 2px solid #ddd;
+    padding: 0.5rem 1.5rem 0.5rem 0;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--text-primary);
+    transition: border-color 0.3s ease;
+    /* Custom clean arrow */
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-size: 1em;
+}
+.discovery-filters select:focus, 
+.discovery-filters select:hover {
+    border-bottom: 2px solid var(--text-primary);
+}
+.filter-search-box {
+    border: none;
+    border-bottom: 2px solid #ddd;
+    transition: border-color 0.3s ease;
+    background: transparent;
+}
+.filter-search-box:focus-within {
+    border-bottom: 2px solid var(--text-primary);
+}
+
+/* 5. SMOOTH LUXURY SELECTION COLOR */
+::selection {
+    background: var(--accent);
+    color: #fff;
+}
