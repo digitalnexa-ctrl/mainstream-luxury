@@ -119,26 +119,42 @@ button {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    flex: 0 0 auto; 
+    flex: 0 0 auto;
 }
 
 .header-right {
     justify-content: flex-end;
 }
 
+/* --- FIX: STRICT LOGO IMAGE SIZING --- */
 .header-center {
     flex: 1 1 auto;
-    text-align: center;
-    min-width: 0; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .logo {
-    font-family: var(--font-heading);
-    font-size: clamp(1.1rem, 5vw, 1.5rem); 
-    font-weight: 800;
-    letter-spacing: 0.02em;
-    white-space: nowrap;
+    display: block;
+    line-height: 0; /* Removes invisible spacing under images */
 }
+
+.logo img {
+    display: block;
+    width: auto !important; /* Forces image to keep its shape */
+    height: 24px !important; /* STRICT limit for Mobile */
+    max-width: 140px;
+    object-fit: contain;
+}
+
+/* Make it slightly larger on Desktop but keep it safely inside the header */
+@media (min-width: 768px) {
+    .logo img {
+        height: 32px !important; /* STRICT limit for Desktop */
+        max-width: 220px;
+    }
+}
+/* ------------------------------------- */
 
 .icon-btn {
     position: relative;
