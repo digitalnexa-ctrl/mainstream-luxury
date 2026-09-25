@@ -1,122 +1,20 @@
 /* =========================================================
    MAINSTREAM — STOREFRONT SCRIPT
-   Supabase + Local Products
+   Supabase is the single product source
 ========================================================= */
 
 let products = [];
 let cart = JSON.parse(localStorage.getItem("mainstream_cart") || "[]");
 let wishlist = JSON.parse(localStorage.getItem("mainstream_wishlist") || "[]");
+
 let selectedSize = "M";
 let currentFilter = "all";
-
-/* ---------------------------------------------------------
-   LOCAL FALLBACK PRODUCTS
---------------------------------------------------------- */
-
-const localProducts = [
-    {
-        id: "local-1",
-        name: "SIGNATURE OVERSIZED TEE",
-        brand: "MAINSTREAM",
-        price: 1499,
-        oldPrice: 1999,
-        image1: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=900",
-        image2: "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=900",
-        gallery: [],
-        category: "oversized",
-        description: "A premium oversized silhouette designed for everyday streetwear.",
-        colors: ["Black", "White"],
-        sizes: ["S", "M", "L", "XL"],
-        stock: 20,
-        isNew: true
-    },
-    {
-        id: "local-2",
-        name: "HEAVYWEIGHT ROOTS HOODIE",
-        brand: "MAINSTREAM",
-        price: 2999,
-        oldPrice: 3499,
-        image1: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=900",
-        image2: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=900",
-        gallery: [],
-        category: "hoodies",
-        description: "Heavyweight premium hoodie with a bold Indian-inspired identity.",
-        colors: ["Black", "Grey"],
-        sizes: ["S", "M", "L", "XL"],
-        stock: 15,
-        isNew: true
-    },
-    {
-        id: "local-3",
-        name: "URBAN NOMAD GRAPHIC TEE",
-        brand: "MAINSTREAM",
-        price: 1299,
-        oldPrice: 0,
-        image1: "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=900",
-        image2: "https://images.unsplash.com/photo-1562157873-818bc0726f68?w=900",
-        gallery: [],
-        category: "printed",
-        description: "Statement graphic tee inspired by modern Indian street culture.",
-        colors: ["Black", "Cream"],
-        sizes: ["S", "M", "L", "XL"],
-        stock: 25,
-        isNew: true
-    },
-    {
-        id: "local-4",
-        name: "ACID WASH STATEMENT TEE",
-        brand: "MAINSTREAM",
-        price: 1699,
-        oldPrice: 0,
-        image1: "https://images.unsplash.com/photo-1583743814966-8936f37f4678?w=900",
-        image2: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?w=900",
-        gallery: [],
-        category: "printed",
-        description: "Premium acid-wash tee with an expressive statement graphic.",
-        colors: ["Black"],
-        sizes: ["S", "M", "L", "XL"],
-        stock: 18,
-        isNew: false
-    },
-    {
-        id: "local-5",
-        name: "ESSENTIAL DROP-SHOULDER TEE",
-        brand: "MAINSTREAM",
-        price: 1199,
-        oldPrice: 1499,
-        image1: "https://images.unsplash.com/photo-1529139574466-a303027c1d8b?w=900",
-        image2: "https://images.unsplash.com/photo-1523381294911-8d3cead13475?w=900",
-        gallery: [],
-        category: "oversized",
-        description: "Clean drop-shoulder construction with a premium relaxed fit.",
-        colors: ["White", "Black"],
-        sizes: ["S", "M", "L", "XL"],
-        stock: 30,
-        isNew: false
-    },
-    {
-        id: "local-6",
-        name: "CULTURE PULLOVER HOODIE",
-        brand: "MAINSTREAM",
-        price: 3199,
-        oldPrice: 0,
-        image1: "https://images.unsplash.com/photo-1578681994506-b8f463449011?w=900",
-        image2: "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?w=900",
-        gallery: [],
-        category: "hoodies",
-        description: "Premium relaxed hoodie celebrating contemporary Indian culture.",
-        colors: ["Black", "Brown"],
-        sizes: ["S", "M", "L", "XL"],
-        stock: 12,
-        isNew: false
-    }
-];
-
-/* ---------------------------------------------------------
-   SUPABASE
---------------------------------------------------------- */
-
 let db = null;
+
+
+/* =========================================================
+   SUPABASE
+========================================================= */
 
 try {
     if (
@@ -133,118 +31,234 @@ try {
     console.error("Supabase initialization failed:", error);
 }
 
-/* ---------------------------------------------------------
-   LOAD PRODUCTS
---------------------------------------------------------- */
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function escapeHTML(value) {
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+function formatPrice(value) {
+    return Number(value || 0).toLocaleString("en-IN");
+}
+
+function getProductImage(product) {
+    return (
+        product.image1 ||
+        product.image2 ||
+        (Array.isArray(product.gallery)
+            ? product.gallery[0]
+            : "") ||
+        ""
+    );
+}
+
+function normalizeCategory(category) {
+    const value = String(category || "printed").toLowerCase();
+
+    if (value.includes("hood")) {
+        return "hoodies";
+    }
+
+    if (value.includes("over")) {
+        return "oversized";
+    }
+
+    if (
+        value.includes("print") ||
+        value.includes("graphic") ||
+        value.includes("tee")
+    ) {
+        return "printed";
+    }
+
+    return value;
+}
+
+
+/* =========================================================
+   LOAD PRODUCTS FROM SUPABASE
+========================================================= */
 
 async function loadProducts() {
-    products = [...localProducts];
 
-    if (db) {
-        try {
-            const { data, error } = await db
-                .from("products")
-                .select("*")
-                .eq("is_active", true)
-                .order("created_at", { ascending: false });
+    if (!db) {
+        console.error("Supabase is not available.");
+        products = [];
+        renderAll();
+        return;
+    }
 
-            if (!error && data) {
-                const supabaseProducts = data.map(p => ({
-                    id: "db-" + p.id,
-                    dbId: p.id,
-                    name: p.name || "MAINSTREAM PRODUCT",
-                    brand: p.brand || "MAINSTREAM",
-                    price: Number(p.price || 0),
-                    oldPrice: Number(p.old_price || 0),
-                    discount: Number(p.discount || 0),
-                    image1: p.image1 || "",
-                    image2: p.image2 || "",
-                    gallery: Array.isArray(p.gallery) ? p.gallery : [],
-                   category: (() => {
-    const c = (p.category || "printed").toLowerCase();
+    try {
 
-    if (c.includes("hood")) return "hoodies";
-    if (c.includes("over")) return "oversized";
-    if (c.includes("print") || c.includes("graphic")) return "printed";
+        const { data, error } = await db
+            .from("products")
+            .select("*")
+            .eq("is_active", true)
+            .order("created_at", {
+                ascending: false
+            });
 
-    return c;
-})(),
-                    description: p.description || "Premium MAINSTREAM streetwear.",
-                    colors: Array.isArray(p.colors) ? p.colors : [],
-                    sizes: Array.isArray(p.sizes) && p.sizes.length
-                        ? p.sizes
-                        : ["S", "M", "L", "XL"],
-                    stock: Number(p.stock || 0),
-                    isNew: Boolean(p.is_new)
-                }));
-
-                products = supabaseProducts;
-            }
-        } catch (error) {
+        if (error) {
             console.error("Product loading error:", error);
+            products = [];
+        } else {
+
+            products = (data || []).map(product => ({
+
+                id: "db-" + product.id,
+
+                dbId: product.id,
+
+                name:
+                    product.name ||
+                    "MAINSTREAM PRODUCT",
+
+                brand:
+                    product.brand ||
+                    "MAINSTREAM",
+
+                price:
+                    Number(product.price || 0),
+
+                oldPrice:
+                    Number(product.old_price || 0),
+
+                discount:
+                    Number(product.discount || 0),
+
+                image1:
+                    product.image1 || "",
+
+                image2:
+                    product.image2 || "",
+
+                gallery:
+                    Array.isArray(product.gallery)
+                        ? product.gallery
+                        : [],
+
+                category:
+                    normalizeCategory(product.category),
+
+                description:
+                    product.description ||
+                    "Premium MAINSTREAM streetwear.",
+
+                colors:
+                    Array.isArray(product.colors)
+                        ? product.colors
+                        : [],
+
+                sizes:
+                    Array.isArray(product.sizes) &&
+                    product.sizes.length
+                        ? product.sizes
+                        : ["S", "M", "L", "XL"],
+
+                stock:
+                    Number(product.stock || 0),
+
+                isNew:
+                    Boolean(product.is_new)
+
+            }));
         }
+
+    } catch (error) {
+
+        console.error(
+            "Unexpected product loading error:",
+            error
+        );
+
+        products = [];
     }
 
     renderAll();
 }
 
-/* ---------------------------------------------------------
-   SAFE IMAGE
---------------------------------------------------------- */
 
-function getProductImage(product) {
-    return product.image1 ||
-        "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=900";
-}
-
-/* ---------------------------------------------------------
-   RENDER EVERYTHING
---------------------------------------------------------- */
+/* =========================================================
+   RENDER ALL
+========================================================= */
 
 function renderAll() {
+
     renderNewDrop();
+
     renderBestSellers();
+
     renderHoodies();
+
     renderDiscovery();
+
     updateCartCount();
+
+    updateWishlistCount();
 }
 
-/* ---------------------------------------------------------
+
+/* =========================================================
    PRODUCT CARD
---------------------------------------------------------- */
+========================================================= */
 
 function renderProductCard(product) {
-    const wished = wishlist.includes(product.id);
-    const secondImage = product.image2 || getProductImage(product);
+
+    const wished =
+        wishlist.includes(product.id);
+
+    const front =
+        getProductImage(product);
+
+    const back =
+        product.image2 ||
+        front;
 
     return `
+
         <article class="product-card reveal">
 
-            <div class="product-image-wrap"
-                 onclick="openProduct('${product.id}')">
+            <div
+                class="product-image-wrap"
+                onclick="openProduct('${escapeHTML(product.id)}')"
+            >
 
                 <img
                     class="product-image product-front"
-                    src="${getProductImage(product)}"
+                    src="${escapeHTML(front)}"
                     alt="${escapeHTML(product.name)}"
                     loading="lazy"
-                    onerror="this.src='https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=900'"
                 >
 
                 <img
                     class="product-image product-back"
-                    src="${secondImage}"
+                    src="${escapeHTML(back)}"
                     alt="${escapeHTML(product.name)}"
                     loading="lazy"
-                    onerror="this.src='${getProductImage(product)}'"
                 >
 
-                ${product.isNew ? `<span class="product-badge">NEW</span>` : ""}
+                ${
+                    product.isNew
+                        ? `<span class="product-badge">NEW</span>`
+                        : ""
+                }
 
                 <button
                     class="wishlist-btn ${wished ? "active" : ""}"
-                    onclick="event.stopPropagation(); toggleWishlistItem('${product.id}')"
-                    aria-label="Wishlist">
+                    onclick="
+                        event.stopPropagation();
+                        toggleWishlistItem('${escapeHTML(product.id)}')
+                    "
+                    aria-label="Wishlist"
+                >
                     ${wished ? "♥️" : "♡"}
                 </button>
 
@@ -252,30 +266,49 @@ function renderProductCard(product) {
 
             <div class="product-info">
 
-                <p class="product-brand">${escapeHTML(product.brand)}</p>
+                <p class="product-brand">
+                    ${escapeHTML(product.brand)}
+                </p>
 
-                <h3>${escapeHTML(product.name)}</h3>
+                <h3>
+                    ${escapeHTML(product.name)}
+                </h3>
 
                 <div class="product-price">
-                    <strong>₹${formatPrice(product.price)}</strong>
+
+                    <strong>
+                        ₹${formatPrice(product.price)}
+                    </strong>
+
                     ${
                         product.oldPrice
-                        ? `<del>₹${formatPrice(product.oldPrice)}</del>`
-                        : ""
+                            ? `
+                                <del>
+                                    ₹${formatPrice(product.oldPrice)}
+                                </del>
+                              `
+                            : ""
                     }
+
                 </div>
 
                 <div class="product-buttons">
 
                     <button
                         class="product-btn"
-                        onclick="openProduct('${product.id}')">
+                        onclick="
+                            openProduct('${escapeHTML(product.id)}')
+                        "
+                    >
                         VIEW PRODUCT
                     </button>
 
                     <button
                         class="product-btn product-btn-dark"
-                        onclick="addToCart('${product.id}')">
+                        onclick="
+                            addToCart('${escapeHTML(product.id)}')
+                        "
+                    >
                         ADD TO CART
                     </button>
 
@@ -287,80 +320,141 @@ function renderProductCard(product) {
     `;
 }
 
-/* ---------------------------------------------------------
-   SECTIONS
---------------------------------------------------------- */
+
+/* =========================================================
+   NEW DROP
+========================================================= */
 
 function renderNewDrop() {
-    const container = document.getElementById("new-drop-grid");
+
+    const container =
+        document.getElementById("new-drop-grid");
+
     if (!container) return;
 
-    const items = products
-        .filter(p => p.isNew)
-        .slice(0, 4);
+    const items =
+        products
+            .filter(product => product.isNew)
+            .slice(0, 4);
 
-    container.innerHTML = items.length
-        ? items.map(renderProductCard).join("")
-        : `<p class="empty-message">NEW DROP COMING SOON.</p>`;
+    container.innerHTML =
+        items.length
+            ? items.map(renderProductCard).join("")
+            : `
+                <p class="empty-message">
+                    NEW DROP COMING SOON.
+                </p>
+              `;
 }
+
+
+/* =========================================================
+   BEST SELLERS
+========================================================= */
 
 function renderBestSellers() {
-    const container = document.getElementById("best-sellers-track");
+
+    const container =
+        document.getElementById("best-sellers-track");
+
     if (!container) return;
 
-    container.innerHTML = products
-        .slice(0, 4)
-        .map(renderProductCard)
-        .join("");
+    const items =
+        products.slice(0, 4);
+
+    container.innerHTML =
+        items.length
+            ? items.map(renderProductCard).join("")
+            : `
+                <p class="empty-message">
+                    NO PRODUCTS AVAILABLE.
+                </p>
+              `;
 }
+
+
+/* =========================================================
+   HOODIES
+========================================================= */
 
 function renderHoodies() {
-    const container = document.getElementById("hoodies-track");
+
+    const container =
+        document.getElementById("hoodies-track");
+
     if (!container) return;
 
-    const items = products
-        .filter(p => p.category === "hoodies")
-        .slice(0, 4);
+    const items =
+        products
+            .filter(product =>
+                product.category === "hoodies"
+            )
+            .slice(0, 4);
 
-    container.innerHTML = items.length
-        ? items.map(renderProductCard).join("")
-        : `<p class="empty-message">NO HOODIES AVAILABLE.</p>`;
+    container.innerHTML =
+        items.length
+            ? items.map(renderProductCard).join("")
+            : `
+                <p class="empty-message">
+                    NO HOODIES AVAILABLE.
+                </p>
+              `;
 }
 
+
+/* =========================================================
+   PRODUCT DISCOVERY
+========================================================= */
+
 function renderDiscovery() {
-    const container = document.getElementById("product-discovery");
-    if (!container) return;
+
+    const section =
+        document.getElementById("product-discovery");
+
+    if (!section) return;
 
     let items = products;
 
     if (currentFilter !== "all") {
-        items = products.filter(p =>
-            p.category === currentFilter
-        );
+
+        items =
+            products.filter(product =>
+                product.category === currentFilter
+            );
     }
 
     const grid =
-        container.querySelector(".products-grid") ||
-        container.querySelector(".product-grid") ||
-        container;
+        section.querySelector(".products-grid") ||
+        section.querySelector(".product-grid") ||
+        section;
 
-    if (grid) {
-        grid.innerHTML = items.map(renderProductCard).join("");
-    }
+    grid.innerHTML =
+        items.length
+            ? items.map(renderProductCard).join("")
+            : `
+                <p class="empty-message">
+                    NO PRODUCTS AVAILABLE.
+                </p>
+              `;
 }
 
-/* ---------------------------------------------------------
-   CATEGORY SHOPPING
---------------------------------------------------------- */
+
+/* =========================================================
+   CATEGORY
+========================================================= */
 
 function shopCategory(category) {
-    currentFilter = category || "all";
+
+    currentFilter =
+        category || "all";
 
     renderDiscovery();
 
-    const section = document.getElementById("product-discovery");
+    const section =
+        document.getElementById("product-discovery");
 
     if (section) {
+
         section.scrollIntoView({
             behavior: "smooth",
             block: "start"
@@ -370,27 +464,24 @@ function shopCategory(category) {
     closeMobileMenu();
 }
 
+
 function showAllProducts() {
+
     currentFilter = "all";
+
     renderDiscovery();
 
-    const section = document.getElementById("product-discovery");
-
-    if (section) {
-        section.scrollIntoView({
-            behavior: "smooth"
-        });
-    }
+    scrollToSection("product-discovery");
 }
 
-/* ---------------------------------------------------------
-   SCROLL HELPERS
---------------------------------------------------------- */
 
 function scrollToSection(id) {
-    const element = document.getElementById(id);
+
+    const element =
+        document.getElementById(id);
 
     if (element) {
+
         element.scrollIntoView({
             behavior: "smooth",
             block: "start"
@@ -400,23 +491,25 @@ function scrollToSection(id) {
     closeMobileMenu();
 }
 
-/* ---------------------------------------------------------
+
+/* =========================================================
    PRODUCT DETAIL
---------------------------------------------------------- */
+========================================================= */
 
 function openProduct(id) {
-    const product = products.find(
-        p => String(p.id) === String(id)
-    );
+
+    const product =
+        products.find(
+            item =>
+                String(item.id) === String(id)
+        );
 
     if (!product) return;
 
-    const view = document.getElementById("product-view");
+    const view =
+        document.getElementById("product-view");
 
-    if (!view) {
-        alert("Product page section not found.");
-        return;
-    }
+    if (!view) return;
 
     const gallery = [
         getProductImage(product),
@@ -425,11 +518,13 @@ function openProduct(id) {
     ].filter(Boolean);
 
     view.innerHTML = `
+
         <div class="product-detail">
 
             <button
                 class="product-back-btn"
-                onclick="showHome()">
+                onclick="showHome()"
+            >
                 ← BACK TO SHOP
             </button>
 
@@ -438,21 +533,40 @@ function openProduct(id) {
                 <div class="product-detail-gallery">
 
                     <div class="product-main-image">
+
                         <img
                             id="mainProductImage"
-                            src="${gallery[0]}"
-                            alt="${escapeHTML(product.name)}">
+                            src="${escapeHTML(gallery[0] || "")}"
+                            alt="${escapeHTML(product.name)}"
+                        >
+
                     </div>
 
                     <div class="product-thumbnails">
-                        ${gallery.map((img, index) => `
-                            <button onclick="changeProductImage('${escapeAttribute(img)}')">
-                                <img src="${img}" alt="">
+
+                        ${gallery.map(image => `
+
+                            <button
+                                onclick="
+                                    changeProductImage(
+                                        '${escapeHTML(image)}'
+                                    )
+                                "
+                            >
+
+                                <img
+                                    src="${escapeHTML(image)}"
+                                    alt=""
+                                >
+
                             </button>
+
                         `).join("")}
+
                     </div>
 
                 </div>
+
 
                 <div class="product-detail-info">
 
@@ -460,68 +574,129 @@ function openProduct(id) {
                         ${escapeHTML(product.brand)}
                     </p>
 
-                    <h1>${escapeHTML(product.name)}</h1>
+                    <h1>
+                        ${escapeHTML(product.name)}
+                    </h1>
 
                     <div class="detail-price">
-                        <strong>₹${formatPrice(product.price)}</strong>
+
+                        <strong>
+                            ₹${formatPrice(product.price)}
+                        </strong>
+
                         ${
                             product.oldPrice
-                            ? `<del>₹${formatPrice(product.oldPrice)}</del>`
-                            : ""
+                                ? `
+                                    <del>
+                                        ₹${formatPrice(
+                                            product.oldPrice
+                                        )}
+                                    </del>
+                                  `
+                                : ""
                         }
+
                     </div>
 
                     <p class="product-description">
                         ${escapeHTML(product.description)}
                     </p>
 
+
                     ${
-                        product.colors?.length
-                        ? `
-                        <div class="detail-option">
-                            <h4>COLOUR</h4>
-                            <div class="color-options">
-                                ${product.colors.map(color => `
-                                    <button class="color-option">
-                                        ${escapeHTML(color)}
-                                    </button>
-                                `).join("")}
-                            </div>
-                        </div>
-                        `
-                        : ""
+                        product.colors.length
+                            ? `
+                                <div class="detail-option">
+
+                                    <h4>COLOUR</h4>
+
+                                    <div class="color-options">
+
+                                        ${product.colors.map(
+                                            color => `
+                                                <button
+                                                    class="color-option"
+                                                >
+                                                    ${escapeHTML(color)}
+                                                </button>
+                                            `
+                                        ).join("")}
+
+                                    </div>
+
+                                </div>
+                              `
+                            : ""
                     }
 
+
                     <div class="detail-option">
+
                         <h4>SIZE</h4>
 
                         <div class="size-options">
+
                             ${product.sizes.map(size => `
+
                                 <button
-                                    class="size-option ${size === selectedSize ? "selected" : ""}"
-                                    onclick="selectSize('${escapeAttribute(size)}')">
+                                    class="
+                                        size-option
+                                        ${
+                                            size === selectedSize
+                                                ? "selected"
+                                                : ""
+                                        }
+                                    "
+                                    onclick="
+                                        selectSize(
+                                            '${escapeHTML(size)}'
+                                        )
+                                    "
+                                >
                                     ${escapeHTML(size)}
                                 </button>
+
                             `).join("")}
+
                         </div>
+
                     </div>
+
 
                     <button
                         class="detail-add-btn"
-                        onclick="addToCart('${product.id}')">
+                        onclick="
+                            addToCart('${escapeHTML(product.id)}')
+                        "
+                    >
                         ADD TO CART
                     </button>
 
+
                     <button
                         class="detail-buy-btn"
-                        onclick="buyNow('${product.id}')">
+                        onclick="
+                            buyNow('${escapeHTML(product.id)}')
+                        "
+                    >
                         BUY NOW
                     </button>
 
+
                     <div class="product-meta">
-                        <p>✓ Premium Indian Streetwear</p>
-                        <p>✓ Secure Checkout</p>
-                        <p>✓ Express Shipping Across India</p>
+
+                        <p>
+                            ✓ Premium Indian Streetwear
+                        </p>
+
+                        <p>
+                            ✓ Secure Checkout
+                        </p>
+
+                        <p>
+                            ✓ Express Shipping Across India
+                        </p>
+
                     </div>
 
                 </div>
@@ -531,9 +706,13 @@ function openProduct(id) {
         </div>
     `;
 
-    document.querySelectorAll("main > section").forEach(section => {
-        section.style.display = "none";
-    });
+
+    const mainView =
+        document.getElementById("main-view");
+
+    if (mainView) {
+        mainView.style.display = "none";
+    }
 
     view.style.display = "block";
 
@@ -543,21 +722,49 @@ function openProduct(id) {
     });
 }
 
+
 function changeProductImage(image) {
-    const main = document.getElementById("mainProductImage");
-    if (main) main.src = image;
+
+    const main =
+        document.getElementById("mainProductImage");
+
+    if (main) {
+        main.src = image;
+    }
 }
 
+
+function selectSize(size) {
+
+    selectedSize = size;
+
+    document
+        .querySelectorAll(".size-option")
+        .forEach(button => {
+
+            button.classList.toggle(
+                "selected",
+                button.textContent.trim() === size
+            );
+        });
+}
+
+
 function showHome() {
-    const view = document.getElementById("product-view");
+
+    const view =
+        document.getElementById("product-view");
+
+    const mainView =
+        document.getElementById("main-view");
 
     if (view) {
         view.style.display = "none";
     }
 
-    document.querySelectorAll("main > section").forEach(section => {
-        section.style.display = "";
-    });
+    if (mainView) {
+        mainView.style.display = "";
+    }
 
     window.scrollTo({
         top: 0,
@@ -567,31 +774,48 @@ function showHome() {
     renderAll();
 }
 
-/* ---------------------------------------------------------
+
+/* =========================================================
    CART
---------------------------------------------------------- */
+========================================================= */
 
 function addToCart(id) {
-    const product = products.find(
-        p => String(p.id) === String(id)
-    );
+
+    const product =
+        products.find(
+            item =>
+                String(item.id) === String(id)
+        );
 
     if (!product) return;
 
-    const existing = cart.find(
-        item => String(item.id) === String(id)
-    );
+    const existing =
+        cart.find(
+            item =>
+                String(item.id) === String(id) &&
+                item.size === selectedSize
+        );
 
     if (existing) {
+
         existing.quantity += 1;
+
     } else {
+
         cart.push({
+
             id: product.id,
+
             name: product.name,
+
             price: product.price,
+
             image: getProductImage(product),
+
             size: selectedSize,
+
             quantity: 1
+
         });
     }
 
@@ -602,86 +826,595 @@ function addToCart(id) {
 
     updateCartCount();
 
-    alert(`${product.name} added to cart.`);
+    openCart();
 }
 
-function removeFromCart(id) {
-    cart = cart.filter(
-        item => String(item.id) !== String(id)
-    );
+
+function removeFromCart(id, size) {
+
+    cart =
+        cart.filter(item =>
+            !(
+                String(item.id) === String(id) &&
+                (!size || item.size === size)
+            )
+        );
 
     localStorage.setItem(
         "mainstream_cart",
         JSON.stringify(cart)
     );
 
-    openCart();
     updateCartCount();
+
+    openCart();
 }
+
 
 function updateCartCount() {
-    const count = cart.reduce(
-        (total, item) => total + Number(item.quantity || 0),
-        0
-    );
 
-    const elements = document.querySelectorAll("#cartCount");
+    const count =
+        cart.reduce(
+            (total, item) =>
+                total + Number(item.quantity || 0),
+            0
+        );
 
-    elements.forEach(el => {
-        el.textContent = count;
-    });
+    document
+        .querySelectorAll("#cartCount")
+        .forEach(element => {
+            element.textContent = count;
+        });
 }
 
+
 function openCart() {
-    let drawer = document.getElementById("mainstream-cart");
+
+    let drawer =
+        document.getElementById("mainstream-cart");
 
     if (!drawer) {
-        drawer = document.createElement("div");
-        drawer.id = "mainstream-cart";
-        drawer.className = "mainstream-cart";
+
+        drawer =
+            document.createElement("div");
+
+        drawer.id =
+            "mainstream-cart";
+
+        drawer.className =
+            "mainstream-cart";
+
         document.body.appendChild(drawer);
     }
 
-    const total = cart.reduce(
-        (sum, item) =>
-            sum + Number(item.price) * Number(item.quantity),
-        0
-    );
+
+    const total =
+        cart.reduce(
+            (sum, item) =>
+                sum +
+                Number(item.price) *
+                Number(item.quantity),
+            0
+        );
+
 
     drawer.innerHTML = `
-        <div class="cart-overlay" onclick="closeCart()"></div>
+
+        <div
+            class="cart-overlay"
+            onclick="closeCart()"
+        ></div>
 
         <div class="cart-panel">
 
-            <button class="cart-close" onclick="closeCart()">×</button>
+            <button
+                class="cart-close"
+                onclick="closeCart()"
+            >
+                ×
+            </button>
 
-            <h2>YOUR CART</h2>
+            <h2>
+                YOUR CART
+            </h2>
+
+
+            <div class="cart-items">
+
+                ${
+                    cart.length
+                        ? cart.map(item => `
+
+                            <div class="cart-item">
+
+                                <img
+                                    src="${escapeHTML(item.image)}"
+                                    alt=""
+                                >
+
+                                <div>
+
+                                    <h4>
+                                        ${escapeHTML(item.name)}
+                                    </h4>
+
+                                    <p>
+                                        Size:
+                                        ${escapeHTML(item.size)}
+                                    </p>
+
+                                    <p>
+                                        Qty:
+                                        ${item.quantity}
+                                    </p>
+
+                                    <strong>
+                                        ₹${formatPrice(
+                                            item.price *
+                                            item.quantity
+                                        )}
+                                    </strong>
+
+                                    <button
+                                        onclick="
+                                            removeFromCart(
+                                                '${escapeHTML(item.id)}',
+                                                '${escapeHTML(item.size)}'
+                                            )
+                                        "
+                                    >
+                                        REMOVE
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        `).join("")
+
+                        : `
+                            <p class="empty-message">
+                                YOUR CART IS EMPTY.
+                            </p>
+                          `
+                }
+
+            </div>
+
+
+            <div class="cart-total">
+
+                <span>
+                    TOTAL
+                </span>
+
+                <strong>
+                    ₹${formatPrice(total)}
+                </strong>
+
+            </div>
+
 
             ${
                 cart.length
-                ? cart.map(item => `
-                    <div class="cart-item">
-
-                        <img src="${item.image}" alt="">
-
-                        <div>
-                            <h4>${escapeHTML(item.name)}</h4>
-                            <p>Size: ${escapeHTML(item.size)}</p>
-                            <p>Qty: ${item.quantity}</p>
-                            <strong>
-                                ₹${formatPrice(item.price * item.quantity)}
-                            </strong>
-
-                            <button
-                                onclick="removeFromCart('${item.id}')">
-                                REMOVE
-                            </button>
-                        </div>
-
-                    </div>
-                `).join("")
-                : `<p class="empty-message">YOUR CART IS EMPTY.</p>`
+                    ? `
+                        <button
+                            class="checkout-btn"
+                            onclick="checkout()"
+                        >
+                            CHECKOUT
+                        </button>
+                      `
+                    : ""
             }
 
-            <div class="cart-total">
-                <span>TOTAL</sp
+        </div>
+    `;
+}
+
+
+function closeCart() {
+
+    const drawer =
+        document.getElementById("mainstream-cart");
+
+    if (drawer) {
+        drawer.remove();
+    }
+}
+
+
+function checkout() {
+
+    if (!cart.length) {
+        alert("Your cart is empty.");
+        return;
+    }
+
+    alert(
+        "Checkout is ready to be connected to your payment gateway."
+    );
+}
+
+
+/* =========================================================
+   WISHLIST
+========================================================= */
+
+function toggleWishlistItem(id) {
+
+    const index =
+        wishlist.indexOf(id);
+
+    if (index >= 0) {
+
+        wishlist.splice(index, 1);
+
+    } else {
+
+        wishlist.push(id);
+    }
+
+    localStorage.setItem(
+        "mainstream_wishlist",
+        JSON.stringify(wishlist)
+    );
+
+    updateWishlistCount();
+
+    renderAll();
+}
+
+
+function updateWishlistCount() {
+
+    const count =
+        wishlist.length;
+
+    document
+        .querySelectorAll("#wishlist-count")
+        .forEach(element => {
+            element.textContent = count;
+        });
+}
+
+
+function toggleWishlist() {
+
+    const items =
+        products.filter(product =>
+            wishlist.includes(product.id)
+        );
+
+    if (!items.length) {
+
+        alert("Your wishlist is empty.");
+
+        return;
+    }
+
+    const section =
+        document.getElementById(
+            "product-discovery"
+        );
+
+    if (section) {
+
+        section.scrollIntoView({
+            behavior: "smooth"
+        });
+    }
+
+    const grid =
+        section?.querySelector(".products-grid") ||
+        section?.querySelector(".product-grid");
+
+    if (grid) {
+        grid.innerHTML =
+            items.map(renderProductCard).join("");
+    }
+}
+
+
+/* =========================================================
+   BUY NOW
+========================================================= */
+
+function buyNow(id) {
+
+    const product =
+        products.find(
+            item =>
+                String(item.id) === String(id)
+        );
+
+    if (!product) return;
+
+    cart = [{
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: getProductImage(product),
+        size: selectedSize,
+        quantity: 1
+    }];
+
+    localStorage.setItem(
+        "mainstream_cart",
+        JSON.stringify(cart)
+    );
+
+    updateCartCount();
+
+    openCart();
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+function searchProducts() {
+
+    const query =
+        prompt("Search MAINSTREAM products:");
+
+    if (!query) return;
+
+    const search =
+        query.toLowerCase().trim();
+
+    const matches =
+        products.filter(product =>
+            `${product.name} ${product.category} ${product.description}`
+                .toLowerCase()
+                .includes(search)
+        );
+
+    const section =
+        document.getElementById(
+            "product-discovery"
+        );
+
+    if (!section) return;
+
+    section.scrollIntoView({
+        behavior: "smooth"
+    });
+
+    const grid =
+        section.querySelector(".products-grid") ||
+        section.querySelector(".product-grid") ||
+        section;
+
+    grid.innerHTML =
+        matches.length
+            ? matches.map(renderProductCard).join("")
+            : `
+                <p class="empty-message">
+                    NO PRODUCTS FOUND.
+                </p>
+              `;
+}
+
+
+/* =========================================================
+   MOBILE MENU
+========================================================= */
+
+function toggleMenu() {
+
+    const menu =
+        document.getElementById("menu-drawer");
+
+    if (!menu) return;
+
+    menu.classList.toggle("active");
+}
+
+
+function closeMobileMenu() {
+
+    const menu =
+        document.getElementById("menu-drawer");
+
+    if (menu) {
+        menu.classList.remove("active");
+    }
+}
+
+
+/* =========================================================
+   HERO CAROUSEL
+========================================================= */
+
+function initHeroCarousel() {
+
+    const track =
+        document.getElementById("hero-track");
+
+    if (!track) return;
+
+    const slides =
+        Array.from(
+            track.querySelectorAll(".slide")
+        );
+
+    if (slides.length < 2) return;
+
+    let current = 0;
+
+    function showSlide(index) {
+
+        current = index;
+
+        slides.forEach(
+            (slide, i) => {
+
+                slide.classList.toggle(
+                    "active",
+                    i === current
+                );
+            }
+        );
+    }
+
+    showSlide(0);
+
+    setInterval(() => {
+
+        showSlide(
+            (current + 1) %
+            slides.length
+        );
+
+    }, 5000);
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function initNavigation() {
+
+    document
+        .querySelectorAll(
+            'a[href="#printed"]'
+        )
+        .forEach(link => {
+
+            link.addEventListener(
+                "click",
+                event => {
+
+                    event.preventDefault();
+
+                    shopCategory(
+                        "printed"
+                    );
+                }
+            );
+        });
+
+
+    document
+        .querySelectorAll(
+            'a[href="#oversized"]'
+        )
+        .forEach(link => {
+
+            link.addEventListener(
+                "click",
+                event => {
+
+                    event.preventDefault();
+
+                    shopCategory(
+                        "oversized"
+                    );
+                }
+            );
+        });
+
+
+    document
+        .querySelectorAll(
+            'a[href="#hoodies"]'
+        )
+        .forEach(link => {
+
+            link.addEventListener(
+                "click",
+                event => {
+
+                    event.preventDefault();
+
+                    scrollToSection(
+                        "hoodies"
+                    );
+                }
+            );
+        });
+
+
+    document
+        .querySelectorAll(
+            'a[href="#best-sellers"]'
+        )
+        .forEach(link => {
+
+            link.addEventListener(
+                "click",
+                event => {
+
+                    event.preventDefault();
+
+                    scrollToSection(
+                        "best-sellers"
+                    );
+                }
+            );
+        });
+
+
+    document
+        .querySelectorAll(
+            'a[href="#new-drop"]'
+        )
+        .forEach(link => {
+
+            link.addEventListener(
+                "click",
+                event => {
+
+                    event.preventDefault();
+
+                    scrollToSection(
+                        "new-drop"
+                    );
+                }
+            );
+        });
+
+
+    document
+        .querySelectorAll(
+            'a[href="#graphic"]'
+        )
+        .forEach(link => {
+
+            link.addEventListener(
+                "click",
+                event => {
+
+                    event.preventDefault();
+
+                    shopCategory(
+                        "printed"
+                    );
+                }
+            );
+        });
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        updateCartCount();
+
+        updateWishlistCount();
+
+        initHeroCarousel();
+
+        initNavigation();
+
+        loadProducts();
+    }
+);
