@@ -1,7 +1,14 @@
-// --- MOCK DATA ---
-const products = [
- // --- MAINSTREAM OFFICIAL INVENTORY ---
-const products = [
+// --- SUPABASE PRODUCT DATA ---
+
+const db = supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+);
+
+let products = [];
+
+// Existing MAINSTREAM products
+const localProducts = [
     {
         id: 1,
         name: "SIGNATURE OVERSIZED TEE",
@@ -87,6 +94,79 @@ const products = [
         sizes: ["M", "L"]
     }
 ];
+
+async function loadProducts() {
+
+    const { data, error } = await db
+        .from("products")
+        .select("*")
+        .eq("is_active", true)
+        .order("created_at", { ascending: false });
+
+    if (error) {
+        console.error("Supabase products error:", error);
+
+        products = [...localProducts];
+        startStorefront();
+
+        return;
+    }
+
+    const supabaseProducts = (data || []).map(p => ({
+        id: `db-${p.id}`,
+        dbId: p.id,
+        name: p.name,
+        brand: p.brand || "MAINSTREAM",
+        price: Number(p.price || 0),
+        oldPrice: p.old_price ? Number(p.old_price) : null,
+        discount: p.discount ? Number(p.discount) : null,
+        image1: p.image1 || "",
+        image2: p.image2 || p.image1 || "",
+        gallery: p.gallery || [],
+        isNew: !!p.is_new,
+        category: p.category || "printed",
+        description: p.description || "",
+        colors: p.colors || ["Black"],
+        sizes: p.sizes || ["S", "M", "L", "XL"],
+        stock: Number(p.stock || 0)
+    }));
+
+    // Keep your existing products + add dashboard products
+    products = [...localProducts, ...supabaseProducts];
+
+    startStorefront();
+}
+
+function startStorefront() {
+
+    renderProductGrid(
+        'new-drop-grid',
+        products.filter(p => p.isNew).slice(0, 4)
+    );
+
+    renderProductCarousel(
+        'best-sellers-track',
+        products
+    );
+
+    renderProductCarousel(
+        'hoodies-track',
+        products.filter(p => p.category === 'hoodies')
+    );
+
+    renderProductGrid(
+        'printed-tees-grid',
+        products.filter(
+            p => p.category === 'printed' ||
+                 p.category === 'oversized'
+        )
+    );
+
+    initHeroCarousel();
+    initScrollReveal();
+}
+
+loadProducts();
 
 // --- STATE ---
 let cart = [];
