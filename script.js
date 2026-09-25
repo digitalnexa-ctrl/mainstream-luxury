@@ -170,7 +170,7 @@ async function loadProducts() {
                     isNew: Boolean(p.is_new)
                 }));
 
-                products = [...supabaseProducts, ...localProducts];
+                products = supabaseProducts;
             }
         } catch (error) {
             console.error("Product loading error:", error);
