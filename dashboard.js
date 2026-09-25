@@ -66,3 +66,20 @@ function removeProduct(id){if(confirm('Delete this product?')){data.products=dat
 function saveHome(){data.homepage={announcement:announcement.value,heroSubtitle:heroSubtitle.value,heroTitle:heroTitle.value,heroButton:heroButton.value};save();alert('Homepage settings saved')}
 function saveSettings(){data.settings={brand:brand.value,email:email.value,whatsapp:whatsapp.value};save();alert('Settings saved')}
 openPage('overview');
+// MOBILE SIDEBAR FIX
+document.querySelectorAll('.nav').forEach(item => {
+  item.addEventListener('click', () => {
+    if (window.innerWidth <= 800) {
+      sidebar.classList.remove('open');
+    }
+  });
+});
+
+document.addEventListener('click', (event) => {
+  if (window.innerWidth <= 800 &&
+      sidebar.classList.contains('open') &&
+      !sidebar.contains(event.target) &&
+      !menu.contains(event.target)) {
+    sidebar.classList.remove('open');
+  }
+});
