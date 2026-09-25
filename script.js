@@ -160,7 +160,15 @@ async function loadProducts() {
                     image1: p.image1 || "",
                     image2: p.image2 || "",
                     gallery: Array.isArray(p.gallery) ? p.gallery : [],
-                    category: (p.category || "printed").toLowerCase(),
+                   category: (() => {
+    const c = (p.category || "printed").toLowerCase();
+
+    if (c.includes("hood")) return "hoodies";
+    if (c.includes("over")) return "oversized";
+    if (c.includes("print") || c.includes("graphic")) return "printed";
+
+    return c;
+})(),
                     description: p.description || "Premium MAINSTREAM streetwear.",
                     colors: Array.isArray(p.colors) ? p.colors : [],
                     sizes: Array.isArray(p.sizes) && p.sizes.length
