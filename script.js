@@ -297,7 +297,7 @@ function renderNewDrop() {
 }
 
 function renderBestSellers() {
-    const container = document.getElementById("best-sellers-grid");
+    const container = document.getElementById("best-sellers-track");
     if (!container) return;
 
     container.innerHTML = products
@@ -307,7 +307,7 @@ function renderBestSellers() {
 }
 
 function renderHoodies() {
-    const container = document.getElementById("hoodies-grid");
+    const container = document.getElementById("hoodies-track");
     if (!container) return;
 
     const items = products
