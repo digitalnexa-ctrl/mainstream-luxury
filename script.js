@@ -1,5 +1,4 @@
 // --- MOCK DATA ---
-const products = [
  // --- MAINSTREAM OFFICIAL INVENTORY ---
 const products = [
     {
