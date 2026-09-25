@@ -427,3 +427,15 @@ function selectSize(btn, size) {
     btns.forEach(b => b.classList.remove('selected'));
     btn.classList.add('selected');
 }
+// --- LUXURY PRELOADER LOGIC ---
+window.addEventListener('load', () => {
+    // Wait an extra 500ms so the user sees the logo animation, then fade it out
+    setTimeout(() => {
+        const preloader = document.getElementById('preloader');
+        if(preloader) {
+            preloader.classList.add('preloader-hidden');
+            // Remove from DOM after fade transition completes
+            setTimeout(() => preloader.remove(), 800);
+        }
+    }, 500);
+});
