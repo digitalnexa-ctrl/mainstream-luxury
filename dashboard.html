@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MAINSTREAM — Admin Dashboard</title>
+<link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+<div class="sidebar">
+  <div class="side-logo"><img src="assets/mainstream-logo.jpg" alt="MAINSTREAM"></div>
+  <nav>
+    <button class="nav active" data-page="overview">▦ <span>Overview</span></button>
+    <button class="nav" data-page="products">□ <span>Products</span></button>
+    <button class="nav" data-page="orders">◇ <span>Orders</span></button>
+    <button class="nav" data-page="store">⚙ <span>Store</span></button>
+  </nav>
+  <a class="view-shop" href="index.html">VIEW SHOP ↗</a>
+</div>
+
+<div class="main">
+<header class="topbar">
+  <div><button id="mobileMenu" class="mobile-menu">☰</button><span class="top-title">MAINSTREAM / ADMIN</span></div>
+  <div class="top-right"><span id="adminEmail"></span><button id="logout">LOGOUT</button></div>
+</header>
+
+<main id="dashboardApp" class="hidden">
+  <section class="page active-page" id="page-overview">
+    <div class="page-head"><div><p class="eyebrow">STORE CONTROL</p><h1>Overview</h1><p class="muted">Your MAINSTREAM store at a glance.</p></div><button class="primary" id="quickAdd">+ ADD PRODUCT</button></div>
+    <div class="stats">
+      <div class="stat"><span>PRODUCTS</span><b id="statProducts">0</b><small>active catalogue</small></div>
+      <div class="stat"><span>ORDERS</span><b id="statOrders">0</b><small>all orders</small></div>
+      <div class="stat"><span>REVENUE</span><b id="statRevenue">₹0</b><small>recorded orders</small></div>
+      <div class="stat"><span>LOW STOCK</span><b id="statLow">0</b><small>10 units or less</small></div>
+    </div>
+    <div class="dashboard-grid">
+      <div class="panel"><div class="panel-head"><h2>Recent Products</h2><button data-goto="products">VIEW ALL</button></div><div id="recentProducts"></div></div>
+      <div class="panel"><div class="panel-head"><h2>Recent Orders</h2><button data-goto="orders">VIEW ALL</button></div><div id="recentOrders"></div></div>
+    </div>
+  </section>
+
+  <section class="page" id="page-products">
+    <div class="page-head"><div><p class="eyebrow">CATALOGUE</p><h1>Products</h1></div><button class="primary" id="addProduct">+ ADD PRODUCT</button></div>
+    <div class="toolbar"><input id="productSearch" placeholder="Search products..."><select id="productFilter"><option value="all">All categories</option><option value="oversized">Oversized</option><option value="printed">Printed / Graphic</option><option value="hoodies">Hoodies</option></select></div>
+    <div class="panel"><div class="table-wrap" id="productsTable"></div></div>
+  </section>
+
+  <section class="page" id="page-orders">
+    <div class="page-head"><div><p class="eyebrow">SALES</p><h1>Orders</h1></div><button class="secondary" id="refreshOrders">↻ REFRESH</button></div>
+    <div class="toolbar"><input id="orderSearch" placeholder="Search order / customer / phone..."><select id="orderFilter"><option value="all">All statuses</option><option value="new">New</option><option value="processing">Processing</option><option value="shipped">Shipped</option><option value="delivered">Delivered</option><option value="cancelled">Cancelled</option></select></div>
+    <div class="panel"><div class="table-wrap" id="ordersTable"></div></div>
+  </section>
+
+  <section class="page" id="page-store">
+    <div class="page-head"><div><p class="eyebrow">CONFIGURATION</p><h1>Store</h1></div></div>
+    <div class="settings-grid">
+      <div class="panel"><h2>Store Identity</h2><p class="muted">MAINSTREAM — Premium Indian Streetwear</p><div class="setting"><span>Supabase</span><b id="connectionStatus">Checking...</b></div><div class="setting"><span>Product source</span><b>Supabase Products</b></div><div class="setting"><span>Customer wishlist</span><b>Browser storage</b></div></div>
+      <div class="panel"><h2>Quick Links</h2><a class="setting-link" href="index.html">Open storefront ↗</a><a class="setting-link" href="https://supabase.com/dashboard" target="_blank">Open Supabase ↗</a></div>
+    </div>
+  </section>
+</main>
+
+<section id="loginScreen" class="login-screen">
+  <div class="login-card">
+    <img src="assets/mainstream-logo.jpg" alt="MAINSTREAM">
+    <p class="eyebrow">PRIVATE ACCESS</p><h1>ADMIN LOGIN</h1><p class="muted">Sign in with your Supabase admin account.</p>
+    <input id="email" type="email" placeholder="Email address">
+    <input id="password" type="password" placeholder="Password">
+    <button class="primary full" id="loginBtn">SIGN IN</button>
+    <p id="loginMsg" class="message"></p>
+  </div>
+</section>
+</div>
+
+<div class="modal" id="productModal">
+  <div class="modal-card">
+    <div class="modal-head"><h2 id="modalTitle">Add Product</h2><button class="close" id="modalClose">×</button></div>
+    <form id="productForm">
+      <input type="hidden" id="productId">
+      <label>Product name<input id="pName" required></label>
+      <div class="two"><label>Price<input id="pPrice" type="number" min="0" required></label><label>Old price<input id="pOld" type="number" min="0"></label></div>
+      <div class="two"><label>Category<select id="pCategory"><option value="oversized">Oversized T-shirt</option><option value="printed">Printed / Graphic T-shirt</option><option value="hoodies">Hoodie</option></select></label><label>Stock<input id="pStock" type="number" min="0" value="0"></label></div>
+      <label>Image URL<input id="pImage" placeholder="https://..."></label>
+      <label>Description<textarea id="pDescription" rows="3"></textarea></label>
+      <div class="checks"><label><input id="pActive" type="checkbox" checked> Active</label><label><input id="pNew" type="checkbox"> New drop</label><label><input id="pBest" type="checkbox"> Best seller</label></div>
+      <button class="primary full" id="saveProduct">SAVE PRODUCT</button><p id="formMsg" class="message"></p>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MAINSTREAM — Premium Indian Streetwear</title>
+  <meta name="description" content="MAINSTREAM — premium oversized tees, graphic tees and heavyweight hoodies.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="preloader"><img src="assets/mainstream-logo.jpg" alt="MAINSTREAM"></div>
+
+  <div class="ticker"><div>FREE SHIPPING ON ORDERS ABOVE ₹1,999&nbsp;&nbsp;&nbsp; / &nbsp;&nbsp;&nbsp;NEW DROP LIVE&nbsp;&nbsp;&nbsp; / &nbsp;&nbsp;&nbsp;PREMIUM INDIAN STREETWEAR</div></div>
+
+  <header class="site-header">
+    <button class="icon-btn" id="menuBtn" aria-label="Menu">☰</button>
+    <a class="brand" href="#top"><img src="assets/mainstream-logo.jpg" alt="MAINSTREAM"></a>
+    <nav class="desktop-nav">
+      <a href="#new">NEW DROP</a>
+      <a href="#shop">SHOP</a>
+      <a href="#categories">CATEGORIES</a>
+      <a href="#story">OUR STORY</a>
+    </nav>
+    <div class="header-actions">
+      <button class="icon-btn" id="searchBtn" aria-label="Search">⌕</button>
+      <button class="icon-btn" id="wishBtn" aria-label="Wishlist">♡<span id="wishCount">0</span></button>
+      <button class="cart-btn" id="cartBtn">CART <span id="cartCount">0</span></button>
+    </div>
+  </header>
+
+  <aside class="mobile-menu" id="mobileMenu">
+    <button class="close-btn" id="menuClose">×</button>
+    <a href="#new">NEW DROP</a><a href="#shop">SHOP</a><a href="#categories">CATEGORIES</a><a href="#story">OUR STORY</a>
+  </aside>
+
+  <main id="top">
+    <section class="hero" id="hero">
+      <div class="hero-media">
+        <img src="https://images.unsplash.com/photo-1523398002811-999ca8dec234?auto=format&fit=crop&w=2200&q=85" alt="MAINSTREAM streetwear">
+      </div>
+      <div class="hero-overlay"></div>
+      <div class="hero-copy reveal">
+        <p class="eyebrow">MAINSTREAM / PREMIUM</p>
+        <h1>WEAR<br><span>YOUR</span><br>STATEMENT.</h1>
+        <p class="hero-sub">Premium Indian streetwear built for oversized silhouettes, bold graphics and everyday movement.</p>
+        <div class="hero-actions"><a class="btn btn-light" href="#new">SHOP THE DROP</a><a class="text-link light" href="#story">OUR STORY ↘</a></div>
+      </div>
+      <div class="hero-meta"><span>01 / 03</span><span>COIMBATORE · INDIA</span></div>
+      <div class="scroll-cue">SCROLL TO EXPLORE ↓</div>
+    </section>
+
+    <section class="statement">
+      <p class="eyebrow">THE MAINSTREAM CODE</p>
+      <h2>NOT MADE TO BLEND IN.<br><em>MADE TO BE SEEN.</em></h2>
+      <p>Clean construction. Heavy fabrics. Oversized proportions. Graphics with attitude.</p>
+    </section>
+
+    <section class="showcase" id="new">
+      <div class="section-head">
+        <div><p class="eyebrow">01 / THE DROP</p><h2>NEW DROP</h2></div>
+        <a class="text-link" href="#shop">VIEW ALL ↗</a>
+      </div>
+      <div class="featured-product" id="featuredProduct"></div>
+    </section>
+
+    <section class="section offwhite" id="shop">
+      <div class="section-head">
+        <div><p class="eyebrow">02 / SHOP</p><h2>POPULAR PICKS</h2></div>
+        <div class="filters">
+          <button class="filter active" data-filter="all">ALL</button>
+          <button class="filter" data-filter="oversized">OVERSIZED</button>
+          <button class="filter" data-filter="printed">PRINTED</button>
+          <button class="filter" data-filter="hoodies">HOODIES</button>
+        </div>
+      </div>
+      <div class="product-grid" id="productGrid"></div>
+    </section>
+
+    <section class="section" id="categories">
+      <div class="section-head"><div><p class="eyebrow">03 / CATEGORIES</p><h2>BUILT FOR THE DROP</h2></div></div>
+      <div class="category-grid">
+        <button class="category-card tall" data-category="oversized"><img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=1200&q=85" alt=""><span>OVERSIZED TEES</span></button>
+        <button class="category-card" data-category="printed"><img src="https://images.unsplash.com/photo-1503341504253-dff4815485f1?auto=format&fit=crop&w=1200&q=85" alt=""><span>GRAPHIC / PRINTED</span></button>
+        <button class="category-card" data-category="hoodies"><img src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?auto=format&fit=crop&w=1200&q=85" alt=""><span>HEAVYWEIGHT HOODIES</span></button>
+      </div>
+    </section>
+
+    <section class="marquee-section" id="story">
+      <div class="marquee">MAINSTREAM — PREMIUM STREETWEAR — MAINSTREAM — PREMIUM STREETWEAR — </div>
+      <div class="story-grid">
+        <div class="story-image"><img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1600&q=85" alt="MAINSTREAM story"></div>
+        <div class="story-copy">
+          <p class="eyebrow">04 / OUR STORY</p>
+          <h2>INDIAN ROOTS.<br>GLOBAL ATTITUDE.</h2>
+          <p>MAINSTREAM is a premium men's streetwear label built around confident silhouettes and considered details. From oversized tees to heavyweight hoodies, every piece is designed to feel substantial, clean and effortless.</p>
+          <div class="stats"><div><b>06+</b><span>CORE STYLES</span></div><div><b>01</b><span>STATEMENT</span></div><div><b>100%</b><span>ATTITUDE</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section testimonials">
+      <div class="section-head"><div><p class="eyebrow">05 / COMMUNITY</p><h2>WORN BY THE<br>MAINSTREAM</h2></div></div>
+      <div class="quotes">
+        <article><span>“</span><p>Heavy, clean and exactly the oversized fit I wanted.</p><b>— ARJUN</b></article>
+        <article><span>“</span><p>The graphics look premium without trying too hard.</p><b>— RAHUL</b></article>
+        <article><span>“</span><p>MAINSTREAM has that everyday statement-piece feel.</p><b>— KIRAN</b></article>
+      </div>
+    </section>
+
+    <section class="newsletter">
+      <p class="eyebrow">JOIN THE DROP LIST</p>
+      <h2>FIRST ACCESS.<br>NO NOISE.</h2>
+      <form id="newsletterForm"><input id="newsletterEmail" type="email" placeholder="YOUR EMAIL ADDRESS" required><button class="btn btn-dark">JOIN</button></form>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-brand">MAINSTREAM<span>™</span></div>
+    <div class="footer-grid">
+      <div><p class="eyebrow">SHOP</p><a href="#new">New Drop</a><a href="#shop">All Products</a><a href="#categories">Categories</a></div>
+      <div><p class="eyebrow">INFO</p><a href="#story">Our Story</a><a href="#">Shipping</a><a href="#">Returns</a></div>
+      <div><p class="eyebrow">FOLLOW</p><a href="#">Instagram</a><a href="#">Contact</a><a href="dashboard.html">Admin</a></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 MAINSTREAM. ALL RIGHTS RESERVED.</span><span>MADE IN INDIA.</span></div>
+  </footer>
+
+  <div class="search-modal" id="searchModal">
+    <button class="close-btn" id="searchClose">×</button><p class="eyebrow">SEARCH</p><input id="searchInput" placeholder="SEARCH PRODUCTS..."><div id="searchResults"></div>
+  </div>
+
+  <div class="cart-overlay" id="cartOverlay"></div>
+  <aside class="cart-drawer" id="cartDrawer">
+    <div class="drawer-head"><h2>YOUR CART</h2><button class="close-btn" id="cartClose">×</button></div>
+    <div id="cartItems" class="cart-items"></div>
+    <div class="cart-footer"><div><span>TOTAL</span><strong id="cartTotal">₹0</strong></div><button class="btn btn-dark full" id="checkoutBtn">CHECKOUT</button></div>
+  </aside>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
